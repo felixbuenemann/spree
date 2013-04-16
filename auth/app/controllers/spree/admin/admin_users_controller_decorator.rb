@@ -44,11 +44,6 @@ Spree::Admin::UsersController.class_eval do
         @user.roles = roles.reject(&:blank?).collect{|r| Spree::Role.find(r)}
       end
 
-      if params[:user][:password].present?
-        # this logic needed b/c devise wants to log us out after password changes
-        user = Spree::User.reset_password_by_token(params[:user])
-        sign_in(@user, :event => :authentication, :bypass => !Spree::Auth::Config[:signout_after_password_change])
-      end
       flash.now[:notice] = t(:account_updated)
       render :edit
     else
